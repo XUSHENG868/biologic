@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>性染色体抽球系统</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>性染色体抽球系统</h1>
+    <button onclick="drawChromosomes()">抽取一次</button>
+    <button onclick="simulateDraws(1000)">模拟1000次抽取</button>
+    <button onclick="reset()">重置</button>
+    <div id="results">
+        <p>男性次数: <span id="maleCount">0</span></p>
+        <p>女性次数: <span id="femaleCount">0</span></p>
+        <p>当前生男概率: <span id="maleProbability">0%</span></p>
+        <p>当前生女概率: <span id="femaleProbability">0%</span></p>
+        <p>最近配对: <span id="lastPair">无</span></p>
+    </div>
+
+    <script>
+        let maleCount = 0;
+        let femaleCount = 0;
+
+        function drawChromosomes() {
+            // 男性细胞（精子）随机抽取X或Y
+            const maleChromosome = Math.random() < 0.5 ? 'X' : 'Y';
+            // 女性细胞（卵子）固定为X
+            const femaleChromosome = 'X';
+
+            let pair;
+            if (maleChromosome === 'Y' && femaleChromosome === 'X') {
+                pair = 'XY (男性)';
+                maleCount++;
+            } else {
+                pair = 'XX (女性)';
+                femaleCount++;
+            }
+
+            // 计算并显示当前生男生女概率
+            const total = maleCount + femaleCount;
+            const maleProb = total > 0 ? (maleCount / total * 100).toFixed(2) : 0;
+            const femaleProb = total > 0 ? (femaleCount / total * 100).toFixed(2) : 0;
+
+            // 显示结果
+            document.getElementById('lastPair').textContent = `男性细胞（精子）: ${maleChromosome}, 女性细胞（卵子）: ${femaleChromosome} -> ${pair}`;
+            document.getElementById('maleCount').textContent = maleCount;
+            document.getElementById('femaleCount').textContent = femaleCount;
+            document.getElementById('maleProbability').textContent = `${maleProb}%`;
+            document.getElementById('femaleProbability').textContent = `${femaleProb}%`;
+        }
+
+        function simulateDraws(times) {
+            maleCount = 0;
+            femaleCount = 0;
+            for (let i = 0; i < times; i++) {
+                const maleChromosome = Math.random() < 0.5 ? 'X' : 'Y';
+                if (maleChromosome === 'Y') {
+                    maleCount++;
+                } else {
+                    femaleCount++;
+                }
+            }
+            // 计算并显示模拟后的生男生女概率
+            const total = maleCount + femaleCount;
+            const maleProb = total > 0 ? (maleCount / total * 100).toFixed(2) : 0;
+            const femaleProb = total > 0 ? (femaleCount / total * 100).toFixed(2) : 0;
+
+            // 显示模拟结果
+            document.getElementById('maleCount').textContent = maleCount;
+            document.getElementById('femaleCount').textContent = femaleCount;
+            document.getElementById('maleProbability').textContent = `${maleProb}%`;
+            document.getElementById('femaleProbability').textContent = `${femaleProb}%`;
+            document.getElementById('lastPair').textContent = '模拟完成';
+        }
+
+        function reset() {
+            maleCount = 0;
+            femaleCount = 0;
+            document.getElementById('maleCount').textContent = maleCount;
+            document.getElementById('femaleCount').textContent = femaleCount;
+            document.getElementById('maleProbability').textContent = '0%';
+            document.getElementById('femaleProbability').textContent = '0%';
+            document.getElementById('lastPair').textContent = '无';
+        }
+    </script>
+</body>
+</html>
